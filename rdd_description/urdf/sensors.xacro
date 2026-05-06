@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="rdd_sensors" params="parent">
+        
+        <joint name="laser_mount_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="laser_mount"/>
+            <origin xyz="0 0 0.3026" rpy="0 0 0"/>
+        </joint>
+        <link name="laser_mount">
+            <xacro:inertial_sphere mass="0.01" radius="0.01"/>
+        </link>
+
+        <joint name="laser_joint" type="fixed">
+            <parent link="laser_mount"/>
+            <child link="laser_frame"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </joint>
+        <link name="laser_frame">
+            <xacro:inertial_sphere mass="0.01" radius="0.01"/>
+        </link>
+
+        <gazebo reference="laser_frame">
+            <sensor name="rdd_laser" type="ray">
+                <pose>0 0 0 0 0 0</pose>
+                <visualize>true</visualize>
+                <update_rate>15.0</update_rate>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>720</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-1.85</min_angle>
+                            <max_angle>1.85</max_angle>
+                        </horizontal>
+                    </scan>
+                    <range>
+                        <min>0.12</min>
+                        <max>12.0</max>
+                        <resolution>0.01</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.005</stddev>
+                    </noise>
+                </ray>
+                <plugin name="rdd_laser_plugin" filename="libgazebo_ros_ray_sensor.so">
+                    <ros>
+                        <remapping>~/out:=/scan</remapping>
+                    </ros>
+                    <output_type>sensor_msgs/LaserScan</output_type>
+                    <frame_name>laser_frame</frame_name>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+        <joint name="imu_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="imu_link"/>
+            <origin xyz="0 0 0.196" rpy="0 0 0"/>
+        </joint>
+        <link name="imu_link">
+            <xacro:inertial_sphere mass="0.01" radius="0.01"/>
+        </link>
+
+        <gazebo reference="imu_link">
+            <sensor name="rdd_imu" type="imu">
+                <pose>0 0 0 0 0 0</pose>
+                <always_on>true</always_on>
+                <update_rate>100.0</update_rate>
+                <visualize>false</visualize>
+                <plugin name="rdd_imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+                    <ros>
+                        <namespace>/imu</namespace>
+                        <remapping>~/out:=data</remapping>
+                    </ros>
+                    <frame_name>imu_link</frame_name>
+                    <initial_orientation_as_reference>false</initial_orientation_as_reference>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+        <joint name="camera_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="camera_link"/>
+            <origin xyz="0.091 0 0.5983723" rpy="0 0 0"/>
+        </joint>
+        <link name="camera_link">
+            <xacro:inertial_sphere mass="0.01" radius="0.01"/>
+        </link>
+
+        <joint name="camera_optical_joint" type="fixed">
+            <parent link="camera_link"/>
+            <child link="camera_link_optical"/>
+            <origin xyz="0 0 0" rpy="-${pi/2} 0 -${pi/2}"/>
+        </joint>
+        <link name="camera_link_optical">
+            <xacro:inertial_sphere mass="0.01" radius="0.01"/>
+        </link>
+
+        <gazebo reference="camera_link">
+            <sensor name="rdd_camera" type="camera">
+                <pose>0 0 0 0 0 0</pose>
+                <visualize>true</visualize>
+                <update_rate>15.0</update_rate>
+                <camera>
+                    <horizontal_fov>1.047</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.05</near>
+                        <far>20.0</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0</stddev>
+                    </noise>
+                </camera>
+                <plugin name="rdd_camera_plugin" filename="libgazebo_ros_camera.so">
+                    <frame_name>camera_link_optical</frame_name>
+                    <ros>
+                        <namespace>/camera</namespace>
+                    </ros>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+    </xacro:macro>
+</robot>

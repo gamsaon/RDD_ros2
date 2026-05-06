@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="rdd_modules" params="use_mesh_visual:='true'">
+
+    <!-- linear joint -->
+    <joint name="linear_joint" type="prismatic">
+      <parent link="chassis"/>
+      <child link="linear_link"/>
+      <origin xyz="0 0 0.005" rpy="0 0 ${pi/2}"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0.0" upper="0.245" effort="100.0" velocity="1.0"/>
+    </joint>
+
+    <!-- linear link -->
+    <link name="linear_link">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_linear.stl"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0.24 0.17" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.48 0.25 0.21"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="0 0 0.13" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.12 0.12 0.26"/>
+        </geometry>
+      </collision>
+
+      <xacro:inertial_box mass="0.5" x="0.1" y="0.1" z="0.3"/>
+    </link>
+
+    <gazebo reference="linear_link">
+      <self_collide>false</self_collide>
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+
+    <!-- load joint -->
+    <joint name="load_joint" type="revolute">
+      <parent link="linear_link"/>
+      <child link="load_link"/>
+      <origin xyz="0.2462393 0.2591415 0.0807498" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-0.331" upper="0.042" effort="10.0" velocity="1.0"/>
+      <dynamics damping="0.2" friction="0.03"/>
+    </joint>
+
+    <!-- load link -->
+    <link name="load_link">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="-0.2462393 -0.2591415 -0.0807498" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_load.stl"/>
+          </geometry>
+          <material name="white"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0.24 0.10" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.34 0.25 0.07"/>
+          </geometry>
+          <material name="white"/>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="-0.246 -0.018 0.023" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.30 0.24 0.08"/>
+        </geometry>
+      </collision>
+
+      <xacro:inertial_box mass="0.3" x="0.2" y="0.2" z="0.05"/>
+    </link>
+
+    <gazebo reference="load_link">
+      <self_collide>false</self_collide>
+      <material>Gazebo/White</material>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

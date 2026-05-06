@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="rdd_chassis" params="parent use_mesh_visual:='true'">
+
+    <joint name="chassis_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="chassis"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="chassis">
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0.11 0.34" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.51 0.55 0.68"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <!-- Gazebo에서는 차체가 바닥을 먼저 받치지 않도록 collision을 위로 올린다. -->
+      <collision>
+        <origin xyz="0 0 0.14" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.3 0.3 0.12"/>
+        </geometry>
+      </collision>
+
+      <xacro:inertial_box mass="2.0" x="0.3" y="0.3" z="0.15"/>
+
+    </link>
+
+    <xacro:if value="${use_mesh_visual}">
+      <joint name="chassis_body0_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_body0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_body0">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_body0.dae"/>
+          </geometry>
+          <material name="blue"/>
+        </visual>
+
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+
+      <joint name="chassis_body1_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_body1"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_body1">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_body1.dae"/>
+          </geometry>
+          <material name="body1_black">
+            <color rgba="0.01 0.01 0.01 1.0"/>
+          </material>
+        </visual>
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+
+      <joint name="chassis_led_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_led"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_led">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_LED.dae"/>
+          </geometry>
+          <material name="white"/>
+        </visual>
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+
+      <joint name="chassis_switch_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_switch"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_switch">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_pwr_swich.dae"/>
+          </geometry>
+          <material name="white"/>
+        </visual>
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+
+      <joint name="chassis_display_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_display"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_display">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_voltage_display.dae"/>
+          </geometry>
+          <material name="display_black">
+            <color rgba="0.075 0.075 0.075 1.0"/>
+          </material>
+        </visual>
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+
+      <joint name="chassis_emo_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_emo"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint>
+
+      <link name="chassis_emo">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_emo.dae"/>
+          </geometry>
+          <material name="red"/>
+        </visual>
+        <xacro:inertial_box mass="0.001" x="0.01" y="0.01" z="0.01"/>
+      </link>
+    </xacro:if>
+
+    <gazebo reference="chassis">
+      <material>Gazebo/Grey</material>
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
+      <self_collide>false</self_collide>
+    </gazebo>
+
+    <gazebo reference="chassis_body0">
+      <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="chassis_body1">
+      <ambient>0.01 0.01 0.01 1.0</ambient>
+      <diffuse>0.02 0.02 0.02 1.0</diffuse>
+      <specular>0.006 0.006 0.006 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+    </gazebo>
+
+    <gazebo reference="chassis_led">
+      <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="chassis_switch">
+      <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="chassis_display">
+      <ambient>0.07 0.07 0.07 1.0</ambient>
+      <diffuse>0.09 0.09 0.09 1.0</diffuse>
+      <specular>0.02 0.02 0.02 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+    </gazebo>
+
+    <gazebo reference="chassis_emo">
+      <material>Gazebo/Red</material>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

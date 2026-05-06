@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<robot name="rdd_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="use_gazebo_control" default="true"/>
+    <xacro:arg name="use_mesh_visual" default="true"/>
+    <xacro:arg name="use_casters" default="true"/>
+
+    <!-- includes -->
+    <xacro:include filename="inertials.xacro"/>
+    <xacro:include filename="materials.xacro"/>
+    <xacro:include filename="chassis.xacro"/>
+    <xacro:include filename="wheels.xacro"/>
+    <xacro:include filename="casters.xacro"/>
+    <xacro:include filename="linear_loading.xacro"/>
+    <xacro:include filename="sensors.xacro"/>
+
+    <link name="base_link"/>
+
+    <!-- robot structure -->
+    <xacro:rdd_chassis parent="base_link" use_mesh_visual="$(arg use_mesh_visual)"/>
+    <xacro:rdd_wheels parent="base_link" use_mesh_visual="$(arg use_mesh_visual)"/>
+    <xacro:if value="$(arg use_casters)">
+        <xacro:rdd_casters parent="base_link" use_mesh_visual="$(arg use_mesh_visual)"/>
+    </xacro:if>
+    <xacro:rdd_sensors parent="chassis"/>
+    <xacro:rdd_modules use_mesh_visual="$(arg use_mesh_visual)"/>
+
+    <!-- Gazebo material settings -->
+    <gazebo reference="chassis">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="left_wheel">
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>1000000.0</kp>
+        <kd>100.0</kd>
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="right_wheel">
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>1000000.0</kp>
+        <kd>100.0</kd>
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <xacro:if value="$(arg use_gazebo_control)">
+        <!-- ros2_control -->
+        <ros2_control name="GazeboSystem" type="system">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+
+            <joint name="left_wheel_joint">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="velocity"/>
+                <state_interface name="position"/>
+            </joint>
+
+            <joint name="right_wheel_joint">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="velocity"/>
+                <state_interface name="position"/>
+            </joint>
+
+            <joint name="linear_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+            </joint>
+
+            <joint name="load_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+            </joint>
+
+            <joint name="rear_left_caster_swivel_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="rear_left_caster_wheel_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="rear_right_caster_swivel_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+
+            <joint name="rear_right_caster_wheel_joint">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+            </joint>
+        </ros2_control>
+
+        <gazebo>
+            <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+                <parameters>$(find rdd_description)/config/rdd_controllers.yaml</parameters>
+            </plugin>
+        </gazebo>
+    </xacro:if>
+
+</robot>

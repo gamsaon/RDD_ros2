@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="mesh_test_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="mesh_file" default="/home/zxc/ros2_ws/src/rdd_description/meshes/RDD_entity.stl"/>
+
+  <xacro:arg name="scale_x" default="1.0"/>
+  <xacro:arg name="scale_y" default="1.0"/>
+  <xacro:arg name="scale_z" default="1.0"/>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh
+          filename="$(arg mesh_file)"
+          scale="$(arg scale_x) $(arg scale_y) $(arg scale_z)"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.3 0.3 0.3"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0"
+               iyy="0.1" iyz="0.0"
+               izz="0.1"/>
+    </inertial>
+  </link>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Grey</material>
+    <self_collide>false</self_collide>
+  </gazebo>
+
+</robot>

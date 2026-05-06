@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="rdd_wheels" params="parent use_mesh_visual:='true'">
+
+    <!-- LEFT WHEEL -->
+    <joint name="left_wheel_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="left_wheel"/>
+      <origin xyz="0 0.169 0.064932" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="left_wheel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 -${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_L_wheel.dae"/>
+          </geometry>
+          <material name="wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+          <geometry>
+            <cylinder radius="0.065" length="0.04"/>
+          </geometry>
+          <material name="wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.065" length="0.04"/>
+        </geometry>
+      </collision>
+
+      <xacro:inertial_cylinder mass="0.2" radius="0.065" length="0.04"/>
+    </link>
+
+    <gazebo reference="left_wheel">
+      <ambient>0.04 0.04 0.04 1.0</ambient>
+      <diffuse>0.055 0.055 0.055 1.0</diffuse>
+      <specular>0.012 0.012 0.012 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <self_collide>false</self_collide>
+    </gazebo>
+
+
+    <!-- RIGHT WHEEL -->
+    <joint name="right_wheel_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="right_wheel"/>
+      <origin xyz="0 -0.169 0.064932" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="right_wheel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_R_wheel.dae"/>
+          </geometry>
+          <material name="wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+          <geometry>
+            <cylinder radius="0.065" length="0.04"/>
+          </geometry>
+          <material name="wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.065" length="0.04"/>
+        </geometry>
+      </collision>
+
+      <xacro:inertial_cylinder mass="0.2" radius="0.065" length="0.04"/>
+    </link>
+
+    <gazebo reference="right_wheel">
+      <ambient>0.04 0.04 0.04 1.0</ambient>
+      <diffuse>0.055 0.055 0.055 1.0</diffuse>
+      <specular>0.012 0.012 0.012 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <self_collide>false</self_collide>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

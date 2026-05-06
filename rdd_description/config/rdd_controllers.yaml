@@ -1,0 +1,60 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_base_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    linear_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+    load_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+    caster_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+
+diff_drive_base_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+    wheel_separation: 0.338
+    wheel_radius: 0.065
+    publish_rate: 50.0
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: true
+    cmd_vel_timeout: 0.5
+    use_stamped_vel: false
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 0.6
+    linear.x.min_velocity: -0.6
+    linear.x.has_acceleration_limits: true
+    linear.x.max_acceleration: 1.2
+    linear.x.has_jerk_limits: false
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 1.8
+    angular.z.min_velocity: -1.8
+    angular.z.has_acceleration_limits: true
+    angular.z.max_acceleration: 3.0
+    angular.z.has_jerk_limits: false
+
+linear_position_controller:
+  ros__parameters:
+    joints: ["linear_joint"]
+
+load_position_controller:
+  ros__parameters:
+    joints: ["load_joint"]
+
+caster_position_controller:
+  ros__parameters:
+    joints:
+      - "rear_left_caster_swivel_joint"
+      - "rear_left_caster_wheel_joint"
+      - "rear_right_caster_swivel_joint"
+      - "rear_right_caster_wheel_joint"

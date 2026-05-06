@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="rdd_casters" params="parent use_mesh_visual:='true'">
+
+    <joint name="rear_left_caster_mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="rear_left_caster_mount"/>
+      <origin xyz="-0.33 0.2135 0.029" rpy="0 0 0"/>
+    </joint>
+
+    <link name="rear_left_caster_mount">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.33 -0.2135 -0.029" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_L_caster_body0.stl"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="0.035" length="0.004"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia ixx="4e-5" ixy="0.0" ixz="0.0"
+                 iyy="4e-5" iyz="0.0"
+                 izz="4e-5"/>
+      </inertial>
+    </link>
+
+    <joint name="rear_left_caster_swivel_joint" type="continuous">
+      <parent link="rear_left_caster_mount"/>
+      <child link="rear_left_caster_swivel"/>
+      <origin xyz="0 0 -0.0008" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <dynamics damping="0.18" friction="0.02"/>
+    </joint>
+
+    <link name="rear_left_caster_swivel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.33 -0.2135 -0.0282" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_L_caster_body1.stl"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.05 0.03 0.03"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.08"/>
+        <inertia ixx="8e-5" ixy="0.0" ixz="0.0"
+                 iyy="8e-5" iyz="0.0"
+                 izz="8e-5"/>
+      </inertial>
+    </link>
+
+    <joint name="rear_left_caster_wheel_joint" type="continuous">
+      <parent link="rear_left_caster_swivel"/>
+      <child link="rear_left_caster_wheel"/>
+      <origin xyz="-0.018 0 -0.0122" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.08" friction="0.02"/>
+    </joint>
+
+    <link name="rear_left_caster_wheel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.342 -0.2135 -0.016" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_L_caster_wheel.dae"/>
+          </geometry>
+          <material name="caster_wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+          <geometry>
+            <cylinder radius="0.016" length="0.021"/>
+          </geometry>
+          <material name="caster_wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.016" length="0.021"/>
+        </geometry>
+      </collision>
+      <xacro:inertial_cylinder mass="0.08" radius="0.016" length="0.021"/>
+    </link>
+
+    <gazebo reference="rear_left_caster_wheel">
+      <ambient>0.04 0.04 0.04 1.0</ambient>
+      <diffuse>0.055 0.055 0.055 1.0</diffuse>
+      <specular>0.012 0.012 0.012 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+      <mu1>0.10</mu1>
+      <mu2>0.10</mu2>
+      <kp>75000.0</kp>
+      <kd>8.0</kd>
+      <self_collide>false</self_collide>
+    </gazebo>
+
+    <gazebo reference="rear_left_caster_mount">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="rear_left_caster_swivel">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <joint name="rear_right_caster_mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="rear_right_caster_mount"/>
+      <origin xyz="-0.33 -0.2135 0.029" rpy="0 0 0"/>
+    </joint>
+
+    <link name="rear_right_caster_mount">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.33 0.2135 -0.029" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_R_caster_body0.stl"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="0.035" length="0.004"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia ixx="4e-5" ixy="0.0" ixz="0.0"
+                 iyy="4e-5" iyz="0.0"
+                 izz="4e-5"/>
+      </inertial>
+    </link>
+
+    <joint name="rear_right_caster_swivel_joint" type="continuous">
+      <parent link="rear_right_caster_mount"/>
+      <child link="rear_right_caster_swivel"/>
+      <origin xyz="0 0 -0.0008" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <dynamics damping="0.18" friction="0.02"/>
+    </joint>
+
+    <link name="rear_right_caster_swivel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.33 0.2135 -0.0282" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_R_caster_body1.stl"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.05 0.03 0.03"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </xacro:unless>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.08"/>
+        <inertia ixx="8e-5" ixy="0.0" ixz="0.0"
+                 iyy="8e-5" iyz="0.0"
+                 izz="8e-5"/>
+      </inertial>
+    </link>
+
+    <joint name="rear_right_caster_wheel_joint" type="continuous">
+      <parent link="rear_right_caster_swivel"/>
+      <child link="rear_right_caster_wheel"/>
+      <origin xyz="-0.018 0 -0.0122" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.08" friction="0.02"/>
+    </joint>
+
+    <link name="rear_right_caster_wheel">
+      <xacro:if value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0.342 0.2135 -0.016" rpy="0 0 ${pi/2}"/>
+          <geometry>
+            <mesh filename="package://rdd_description/meshes/RDD_R_caster_wheel.dae"/>
+          </geometry>
+          <material name="caster_wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:if>
+
+      <xacro:unless value="${use_mesh_visual}">
+        <visual>
+          <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+          <geometry>
+            <cylinder radius="0.016" length="0.021"/>
+          </geometry>
+          <material name="caster_wheel_black">
+            <color rgba="0.045 0.045 0.045 1.0"/>
+          </material>
+        </visual>
+      </xacro:unless>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.016" length="0.021"/>
+        </geometry>
+      </collision>
+      <xacro:inertial_cylinder mass="0.08" radius="0.016" length="0.021"/>
+    </link>
+
+    <gazebo reference="rear_right_caster_wheel">
+      <ambient>0.04 0.04 0.04 1.0</ambient>
+      <diffuse>0.055 0.055 0.055 1.0</diffuse>
+      <specular>0.012 0.012 0.012 1.0</specular>
+      <emissive>0.0 0.0 0.0 1.0</emissive>
+      <mu1>0.10</mu1>
+      <mu2>0.10</mu2>
+      <kp>75000.0</kp>
+      <kd>8.0</kd>
+      <self_collide>false</self_collide>
+    </gazebo>
+
+    <gazebo reference="rear_right_caster_mount">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="rear_right_caster_swivel">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>
